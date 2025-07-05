@@ -57,7 +57,7 @@ An example config file is `configs/distilled_llama.yaml`.
 1. How can I extend this to describe neurons in a different model?
 
 Currently, the code requires the subject model (the model being explained) and the simulator model (used for scoring descriptions) to share the same tokenizer. So as long as this condition is satisfied (we are planning to release code for finetuning the simulator soon), the pipeline can be applied to other models.
-The logic for doing simulation using a fine-tuned simulator is in the `FinetunedSimulator` class in `activations.simulation_utils`.
+The logic for doing simulation using a fine-tuned simulator is in the `FinetunedSimulator` class in `explanations.simulation_utils`.
 
 2. Can I describe things other than neurons? e.g. SAE features?
 
