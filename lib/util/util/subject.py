@@ -662,6 +662,33 @@ class Llama3Config(LMConfig):
     )
 
 
+class Gemma2Config(LMConfig):
+    unembed_module_str: str = "lm_head"
+    unembed_norm_module_str: str = "model.norm"
+    w_in_module_template: str = "model.layers.{layer}.mlp.up_proj"
+    w_gate_module_template: str = "model.layers.{layer}.mlp.gate_proj"
+    w_out_module_template: str = "model.layers.{layer}.mlp.down_proj"
+    layer_module_template: str = "model.layers.{layer}"
+    mlp_module_template: str = "model.layers.{layer}.mlp"
+    attn_module_template: str = "model.layers.{layer}.self_attn"
+    v_proj_module_template: str = "model.layers.{layer}.self_attn.v_proj"
+    o_proj_module_template: str = "model.layers.{layer}.self_attn.o_proj"
+    input_norm_module_template: str = "model.layers.{layer}.input_layernorm"
+    # gemma2 has other norms but i don't think we need them here -nost
+
+    I_name: str = "intermediate_size"
+    D_name: str = "hidden_size"
+    V_name: str = "vocab_size"
+    L_name: str = "num_hidden_layers"
+    Q_name: str = "num_attention_heads"
+    K_name: str = "num_key_value_heads"
+
+    # layernorm_fn seems unused at the moment so we'll just use the llama3 one here -nost
+    layernorm_fn: Callable[[torch.Tensor, torch.Tensor, torch.Tensor, float], torch.Tensor] = (
+        _llama3_layernorm_fn
+    )
+
+
 llama3_8B_config = Llama3Config(
     hf_model_id="meta-llama/Meta-Llama-3-8B",
     is_chat_model=False,
@@ -682,6 +709,11 @@ llama31_70B_instruct_config = Llama3Config(
     is_chat_model=True,
 )
 
+gemma2_2B_instruct_config = Gemma2Config(
+    hf_model_id="google/gemma-2-2b-it",
+    is_chat_model=True,
+)
+
 
 def get_subject_config(hf_model_id: str):
     if hf_model_id == "meta-llama/Meta-Llama-3-8B":
@@ -692,6 +724,8 @@ def get_subject_config(hf_model_id: str):
         return llama31_8B_instruct_config
     elif hf_model_id == "meta-llama/Meta-Llama-3.1-70B-Instruct":
         return llama31_70B_instruct_config
+    elif hf_model_id == "google/gemma-2-2b-it":
+        return gemma2_2B_instruct_config
     else:
         raise ValueError(f"Unsupported hf_model_id={hf_model_id}")
 
