@@ -47,7 +47,7 @@ class HFDatasetWrapper:
         self,
         config: HFDatasetWrapperConfig,
         subject: Subject,
-        num_proc: int = 10,
+        num_proc: int = 16,
     ):
         if config.hf_dataset_id in ["HuggingFaceFW/fineweb", "HuggingFaceFW/fineweb-edu"]:
             assert config.hf_split == "train"
